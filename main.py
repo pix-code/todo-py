@@ -13,19 +13,6 @@ choices = [
 choice = 0
 prevchoice = 5
 
-'''
-  1 java
-  2 english
-    ╰─lol
-> 3 apush
-  4 math
-    ├─sussy
-    ╰─wyss
-  5 cs
-  6 bio
-
-'''
-
 
 def prntdo():
     os.system('clear')
