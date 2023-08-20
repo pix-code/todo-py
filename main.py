@@ -2,8 +2,19 @@ from readchar import readkey
 from readchar import key as Key
 import os
 
-choices = []
 choice = 0
+key = ''
+binds = {
+        'a': 1,
+        'r': 2,
+        's': 3,
+        't': 4,
+
+        'n': 5,
+        'e': 6,
+        'i': 7,
+        'o': 8,
+        }
 
 with open('data/raw', 'r') as file:
     choices = file.read().splitlines()
@@ -15,6 +26,7 @@ with open('data/raw', 'r') as file:
 
 def prntdo():
     os.system('clear')
+
     for i in range(len(choices)):
         if choice == i:
             print('→ ' + choices[i][0])
@@ -23,11 +35,11 @@ def prntdo():
             print(f'{i+1} ' + choices[i][0])
 
         for j in range(1, len(choices[i])):
-            if j == len(choices[i]) - 1:
-                print('  ╰─' + choices[i][j])
+            if not j == len(choices[i]) - 1:
+                print('  ├─' + choices[i][j])
 
             else:
-                print('  ├─' + choices[i][j])
+                print('  ╰─' + choices[i][j])
 
         if len(choices[i]) > 1:
             print()
@@ -36,7 +48,18 @@ def prntdo():
 def newtask():
     print(f'\nadding entry for {choices[choice][0][5:]}')
     choices[choice].append(input().strip())
+    write()
 
+
+def tostring(s):
+    str1 = ''
+    for i in s:
+        str1 += i
+
+    return str1
+
+
+def write():
     with open('data/raw', 'w') as file:
         for i in choices:
             str1 = ''
@@ -49,18 +72,30 @@ def newtask():
             file.write(str1)
 
 
-def tostring(s):
-    str1 = ''
+def delete():
+    os.system('clear')
+    print('Which entry would you like to delete?')
+    print(f'  {choices[choice][0]}')
 
-    for i in s:
-        str1 += i
+    for j in range(1, len(choices[choice])):
+        if not j == len(choices[choice]) - 1:
+            print(f'{j} ├─' + choices[choice][j])
 
-    return str1
+        else:
+            print(f'{j} ╰─' + choices[choice][j])
+
+    key = readkey()
+
+    if key != 'q':
+        if not key.isdigit():
+            key = binds[key]
+        choices[choice].pop(int(key))
+
+    write()
 
 
 while True:
     prntdo()
-
     key = readkey()
 
     if key == Key.UP or key == 'u':
@@ -87,7 +122,7 @@ while True:
             newtask()
 
     elif key == 'd':
-        os.system('clear')
+        delete()
 
     elif key == 'q':
         break
