@@ -2,21 +2,19 @@ from readchar import readkey
 from readchar import key as Key
 import os
 
-choices = [
-    ['java'],
-    ['english'],
-    ['apush'],
-    ['math'],
-    ['cs'],
-    ['bio']]
-
+choices = []
 choice = 0
-prevchoice = 5
+
+with open('data/raw', 'r') as file:
+    choices = file.read().splitlines()
+
+    for i in range(len(choices)):
+        choices[i] = choices[i].split('\\')
+        choices[i].pop()
 
 
 def prntdo():
     os.system('clear')
-
     for i in range(len(choices)):
         if choice == i:
             print('→ ' + choices[i][0])
@@ -33,6 +31,31 @@ def prntdo():
 
         if len(choices[i]) > 1:
             print()
+
+
+def newtask():
+    print(f'\nadding entry for {choices[choice][0][5:]}')
+    choices[choice].append(input().strip())
+
+    with open('data/raw', 'w') as file:
+        for i in choices:
+            str1 = ''
+
+            for s in i:
+                str1 += s + '\\'
+
+            str1 += '\n'
+
+            file.write(str1)
+
+
+def tostring(s):
+    str1 = ''
+
+    for i in s:
+        str1 += i
+
+    return str1
 
 
 while True:
@@ -55,13 +78,19 @@ while True:
             choice += 1
 
     elif key == Key.ENTER or key == Key.SPACE:
-        print(f'adding entry for {choices[choice][0][5:]}')
-        choices[choice].append(input())
+        newtask()
 
     elif key.isdigit():
         if 1 <= int(key) <= 6:
             choice = int(key) - 1
             prntdo()
+            newtask()
 
-            print(f'adding entry for {choices[choice][0][5:]}')
-            choices[choice].append(input())
+    elif key == 'd':
+        os.system('clear')
+
+    elif key == 'q':
+        break
+
+os.system('clear')
+print('Have a productive day!')
